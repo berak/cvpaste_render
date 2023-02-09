@@ -8,7 +8,7 @@
 #
 
 import sys, socket, threading, time, datetime, os, random
-import subprocess, urllib, urllib2, base64
+import subprocess, urllib, base64
 from cgi import parse_qs, escape
 from wsgiref.simple_server import make_server
 try:
@@ -220,11 +220,13 @@ def write_faq():
 # download an image url, save it, and return the local filename
 #
 def url_image(u):
-    try:
-        c = urllib2.urlopen(u) # TODO NOT portable to py3 ! (main reason i cannot upgrade)
-        img = c.read()
-    except: return ''
     fn="input.img"
+    try:
+        #c = urllib2.urlopen(u) # TODO NOT portable to py3 ! (main reason i cannot upgrade)
+        #img = c.read()
+        subprocess.call(["wget", u, "-O", fn])
+    except: return ''
+    """
     f=open(fn,"wb")
     f.write(img)
     f.close()
@@ -234,6 +236,7 @@ def url_image(u):
         im = cv2.imread("input.img", -1)
         cv2.imwrite("input.jpg", im)
         os.rename("input.jpg", "input.img")
+    """
     return fn
 
 def get_file(fn):
